@@ -1,15 +1,18 @@
 #!/bin/bash
 max=1024    # number of megabytes
-
-mkdir generated
-for ((i=1; i<=2; i++))
+if [ -d $1 ]; then
+    echo "Directory $1 already exists"
+else
+mkdir $1
+fi
+for ((i=1; i<=$2; i++))
 do
     echo Creating file$i
     dd bs=1M count=$(($RANDOM%max + 1)) if=/dev/urandom of=file$i
     a=$(md5sum file$i | awk '{print $1}')
-    mv file$i /home/felix/generated
-    b=$(md5sum /home/felix/generated/file$i | awk '{print $1}')
-    rm /home/felix/generated/file$i
+    mv file$i $1
+    b=$(md5sum $1/file$i | awk '{print $1}')
+    rm $1/file$i
     c=$(diff -u <(echo "$a") <(echo "$b"))
     if [ -s c ] ; then
         echo "$c"
@@ -17,4 +20,6 @@ do
         exit
     fi
 done
+rm -r $1
 echo "Your hashes are identical"
+
