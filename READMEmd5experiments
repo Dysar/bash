@@ -1,0 +1,26 @@
+./yourscript nameofdirectory nameoftxtfile numberofseconds
+
+n=Number of files, that were created within $3 seconds
+
+file1, file2, file3, file4, file(n) created within $3 seconds
+
+$2.txt created
+
+file1hash(before)
+file2hash(before)
+file3hash(before)
+file4hash(before)
+file(n)hash(before)
+
+directory $1 created
+
+for loop will be executed (n) times
+file(n+1),file(n+2),file(n+3),file(n+n) created
+file(n+1),file(n+2),file(n+3),file(n+n) md5 hash(before) counted
+file(n+1),file(n+2),file(n+3),file(n+n) moved to $1/
+file1, file2, file3, file4, file(n) moved to $1/
+file(n+1),file(n+2),file(n+3),file(n+n) md5 hash(after) counted
+file1, file2, file3, file4, file(n) md5 hash(before) is taken from $2.txt
+file1, file2, file3, file4, file(n) md5 hash(after) counted
+if file(n+1),file(n+2),file(n+3),file(n+n) hashes are different, then exit the script
+if file1, file2, file3, file4, file(n) hashes are different, then exit the script
