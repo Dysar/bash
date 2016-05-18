@@ -12,12 +12,12 @@ while [ $SECONDS -lt $end ]; do
     d=$(md5sum file$n | awk '{print $1}')
     echo  $d | cat - $2.txt > temp && mv temp $2.txt
 done
-if [$4 > $n]; then
-    amount=$(($4-$n))
-else
+amount=$(($4-$n))
+if [$amount < 0]; then
     echo "Timeout was too long, all the files are already created"
     find . -type f -iname "file*" -exec rm -rf {} \;
     exit
+fi
 if [ -d $1 ]; then
     echo "Directory $1 already exists"
 else
