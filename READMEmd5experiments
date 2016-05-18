@@ -1,4 +1,4 @@
-./yourscript nameofdirectory nameoftxtfile numberofseconds
+./yourscript nameofdirectory nameoftxtfile numberofseconds numberofminutes numberofFiles
 
 n=Number of files, that were created within $3 seconds
 
