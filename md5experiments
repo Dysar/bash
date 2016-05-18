@@ -1,14 +1,48 @@
 #!/bin/bash
-max= 1024   #MBs
+max=1024   #MBs
 SECONDS=0
-i=1
-while [1] 
-do
-if [ SECONDS < $1 ]
-then
-    echo Creating file$i
-    dd bs=1M count=$(($RANDOM%max + 1)) if=/dev/urandom of=file$i
-    a=$(md5sum file$i | awk '{print $1}')
-fi
+COUNTER=0
+end=$((SECONDS+$3))
+touch $2.txt
+while [ $SECONDS -lt $end ]; do
+    let COUNTER=COUNTER+1
+    echo Creating file$COUNTER
+    dd bs=1M count=$(($RANDOM%max + 1)) if=/dev/urandom of=file$COUNTER
+    d=$(md5sum file$COUNTER | awk '{print $1}')
+    echo  $d | cat - $2.txt > temp && mv temp $2.txt
 done
-
+amount=$COUNTER
+if [ -d $1 ]; then
+    echo "Directory $1 already exists"
+else
+mkdir $1
+fi
+let COUNTER=COUNTER+1
+for ((i=1; i<=amount; i++))
+do
+    echo Creating file$COUNTER
+    dd bs=1M count=$(($RANDOM%max + 1)) if=/dev/urandom of=file$COUNTER
+    a=$(md5sum file$COUNTER | awk '{print $1}')
+    mv file$i $1
+    mv file$COUNTER $1
+    b=$(md5sum $1/file$COUNTER | awk '{print $1}')
+    x=$(sed "${i}q;d" $2.txt)
+    y=$(md5sum $1/file$i | awk '{print $1}')
+    rm $1/file$i
+    c=$(diff -u <(echo "$a") <(echo "$b"))
+    if [ -s c ] ; then
+        echo "$c"
+        echo "Hashes do not match!"
+        exit
+    fi
+    z=$(diff -u <(echo "$x") <(echo "$y"))
+    if [ -s c ] ; then
+        echo "$z"
+        echo "Hashes do not match!"
+        exit
+    fi
+    let COUNTER=COUNTER+1
+done
+rm -r $1
+rm $2.txt
+echo "Your hashes are identical"
