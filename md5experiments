@@ -1,12 +1,11 @@
 #!/bin/bash
 max=1024   #MBs
 SECONDS=0
-n=0
+n=1
 t=$[$3*60]
 end=$((SECONDS+$t))
 touch $2.txt
 while [ $SECONDS -lt $end ]; do
-    let n=n+1
     echo Creating file$n
     dd bs=1M count=$(($RANDOM%max + 1)) if=/dev/urandom of=file$n
     d=$(md5sum file$n | awk '{print $1}')
