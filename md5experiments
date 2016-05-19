@@ -5,49 +5,49 @@ n=1
 t=$[$3*60]
 end=$((SECONDS+$t))
 touch $2.txt
-while [ $SECONDS -lt $end ]; do
-    echo Creating file$n
-    dd bs=1M count=$(($RANDOM%max + 1)) if=/dev/urandom of=file$n
-    d=$(md5sum file$n | awk '{print $1}')
-    echo  $d | cat - $2.txt > temp && mv temp $2.txt
-done
+    while [ $SECONDS -lt $end ]; do
+        echo Creating file$n
+        dd bs=1M count=$(($RANDOM%max + 1)) if=/dev/urandom of=file$n
+        d=$(md5sum file$n | awk '{print $1}')
+        echo  $d | cat - $2.txt > temp && mv temp $2.txt
+    done
 amount=$(($4-$n))
-if [$amount < 0]; then
-    echo "Timeout was too long, all the files are already created"
-    find . -type f -iname "file*" -exec rm -rf {} \;
-    exit
-fi
-if [ -d $1 ]; then
-    echo "Directory $1 already exists"
-else
-mkdir $1
-fi
+    if [$amount < 0]; then
+        echo "Timeout was too long, all the files are already created"
+        find . -type f -iname "file*" -exec rm -rf {} \;
+        exit
+    fi
+    if [ -d $1 ]; then
+        echo "Directory $1 already exists"
+    else
+        mkdir $1
+    fi
 let n=n+1
-for ((i=1; i<=amount; i++))
+    for ((i=1; i<=amount; i++))
 do
-    echo Creating file$n
-    dd bs=1M count=$(($RANDOM%max + 1)) if=/dev/urandom of=file$n
-    a=$(md5sum file$n | awk '{print $1}')
-    mv file$i $1
-    mv file$n $1
-    b=$(md5sum $1/file$n | awk '{print $1}')
-    x=$(sed "${i}q;d" $2.txt)
-    y=$(md5sum $1/file$i | awk '{print $1}')
-    rm $1/file$i
-    c=$(diff -u <(echo "$a") <(echo "$b"))
-    if [ -s c ] ; then
-        echo "$c"
-        echo "Hashes do not match!"
-        exit
-    fi
-    z=$(diff -u <(echo "$x") <(echo "$y"))
-    if [ -s c ] ; then
-        echo "$z"
-        echo "Hashes do not match!"
-        exit
-    fi
-    let n=n+1
-done
+        echo Creating file$n
+        dd bs=1M count=$(($RANDOM%max + 1)) if=/dev/urandom of=file$n
+        a=$(md5sum file$n | awk '{print $1}')
+        mv file$i $1
+        mv file$n $1
+        b=$(md5sum $1/file$n | awk '{print $1}')
+        x=$(sed "${i}q;d" $2.txt)
+        y=$(md5sum $1/file$i | awk '{print $1}')
+        rm $1/file$i
+        c=$(diff -u <(echo "$a") <(echo "$b"))
+        if [ -s c ] ; then
+            echo "$c"
+            echo "Hashes do not match!"
+            exit
+         fi
+        z=$(diff -u <(echo "$x") <(echo "$y"))
+        if [ -s c ] ; then
+            echo "$z"
+            echo "Hashes do not match!"
+            exit
+        fi
+        let n=n+1
+    done
 rm -r $1
 rm $2.txt
 echo "Your hashes are identical"
