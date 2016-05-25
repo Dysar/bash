@@ -1,8 +1,8 @@
 ./yourscript nameofdirectory nameoftxtfile numberofminutes numberofFiles
 
-n=Number of files, that were created within $3 seconds
+n=Number of files, that were created within $3*60 seconds
 
-file1, file2, file3, file4, file(n) created within $3 seconds
+file1, file2, file3, file4, file(n) created within $3*60 seconds
 
 $2.txt created
 
@@ -12,9 +12,14 @@ file3hash(before)
 file4hash(before)
 file(n)hash(before)
 
+count sum.number of files - files already created
+
+if amount of files created before this is more, than the amount that 
+has to be created, then exit the script
+if not, then
 directory $1 created
 
-for loop will be executed (n) times
+for loop will be executed (count sum.number of files - files already created) times
 file(n+1),file(n+2),file(n+3),file(n+n) created
 file(n+1),file(n+2),file(n+3),file(n+n) md5 hash(before) counted
 file(n+1),file(n+2),file(n+3),file(n+n) moved to $1/
