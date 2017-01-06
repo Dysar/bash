@@ -12,7 +12,6 @@ touch $2.txt
         echo  $d | cat - $2.txt > temp && mv temp $2.txt
         let n=n+1
     done
-    #send $n to file
 amount=$(($4-$n))
     if [$amount < 0]; then
         echo "Timeout was too long, all the files are already created"
@@ -24,7 +23,11 @@ amount=$(($4-$n))
     else
         mkdir $1
     fi
-let n=n+1 #remove this and read $n from file
+    if [ ! -f file$n ]; then
+        true
+    else
+        let n=n+1
+    fi
     for ((i=1; i<=amount; i++))
 do
         echo Creating file$n
@@ -50,6 +53,7 @@ do
         fi
         let n=n+1
     done
-rm -r $1
 rm $2.txt
+cd $1
+rm ./*
 echo "Your hashes are identical"
